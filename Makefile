@@ -5,17 +5,18 @@
 ## Login   <chauvo_t@epitech.net>
 ## 
 ## Started on  Fri May 22 15:19:03 2015 chauvo_t
-## Last update Fri May 22 17:44:16 2015 chauvo_t
+## Last update Sun May 24 21:07:03 2015 chauvo_t
 ##
 
 CXX			:= gcc
-QEMU			:= qemu-system-x86_64
+QEMU			:= qemu-system-x86_64 -append "root=/dev/sda console=ttyS0" -serial stdio
 
 SRCDIR			:= src
 OBJDIR			:= build
 HDRDIR			:= include
 
 SRCS			:=	main.c			\
+				utils.c			\
 				crt0.S
 
 OBJS			:= $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
@@ -27,18 +28,17 @@ DEPS			:= $(OBJS:.o=.d)
 CFLAGS			+= -Wextra -Wall -W
 CFLAGS			+= $(addprefix -I./, $(HDRDIR))
 CFLAGS			+= -MD
-CFLAGS			+= -m32 -nostdinc -fno-builtin -fno-stack-protector # -target i386-none-eabi
+CFLAGS			+= -m32 -nostdinc -fno-builtin -fno-stack-protector
 CFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
 debug: CFLAGS		+= -g -g3 -ggdb
 
 LDFLAGS			+= -T kfs.ld
-LDFLAGS			+= -nostdinc -fno-builtin -fno-stack-protector # -target i386-none-eabi
-LDFLAGS			+= -mno-mmx -mno-3dnow -mno-sse # -mno-see2 -mno-see3
-LDFLAGS			+= -nostdlib
+LDFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
+LDFLAGS			+= -nostdlib -fno-stack-protector
+LDFLAGS			+= -m32 -Wl,--build-id=none
 debug: LDFLAGS		+= -g -g3 -ggdb
 
-TMPS			:=	$(OBJS)			\
-				$(OBJS:.o=.d)
+TMPS			:= $(OBJS) $(OBJS:.o=.d)
 
 VDISK			:= disk.img
 NAME			:= yolokernel.elf
@@ -46,26 +46,26 @@ NAME			:= yolokernel.elf
 all:		$(NAME)
 
 boot: all
-	$(QEMU) -kernel $(NAME) -nographic # -hda $(VDISK) -append "root=/dev/sda console=ttyS0"
+	$(QEMU) -kernel $(NAME) # -hda $(VDISK)
 
 debug:	re
-	$(QEMU) -kernel $(NAME) -nographic -s -S # -hda $(VDISK) -append "root=/dev/sda console=ttyS0"
+	$(QEMU) -kernel $(NAME) -s -S # -hda $(VDISK)
 
 -include $(DEPS)
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.S
-		$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
-		$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 $(NAME):	$(OBJS)
-		$(CXX) $(OBJS) -o $(NAME) $(LDFLAGS)
+	$(CXX) $(OBJS) -o $(NAME) $(LDFLAGS)
 
 $(OBJS):	| $(OBJDIR)
 
 $(OBJDIR):
-		mkdir -p $(OBJDIR)
+	mkdir -p $(OBJDIR)
 
 clean:
 	@rm -f $(TMPS)
