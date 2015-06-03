@@ -5,7 +5,7 @@
 ## Login   <chauvo_t@epitech.net>
 ## 
 ## Started on  Fri May 22 15:19:03 2015 chauvo_t
-## Last update Sun May 24 21:07:03 2015 chauvo_t
+## Last update Wed Jun  3 19:17:57 2015 chauvo_t
 ##
 
 CXX			:= gcc
@@ -41,7 +41,7 @@ debug: LDFLAGS		+= -g -g3 -ggdb
 TMPS			:= $(OBJS) $(OBJS:.o=.d)
 
 VDISK			:= disk.img
-NAME			:= yolokernel.elf
+NAME			:= yolo
 
 all:		$(NAME)
 

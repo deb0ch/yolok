@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Sun May 24 20:55:49 2015 chauvo_t
-** Last update Sun May 24 21:08:14 2015 chauvo_t
+** Last update Wed Jun  3 15:59:47 2015 chauvo_t
 */
 
 #ifndef UTILS_H_

@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Fri May 22 18:33:17 2015 chauvo_t
-** Last update Sun May 24 21:11:36 2015 chauvo_t
+** Last update Thu May 28 12:36:23 2015 chauvo_t
 */
 
 #include "serial.h"
@@ -25,14 +25,20 @@
 #define ORANGE		6
 #define GREY		7
 
-typedef struct vga_text_char
+struct s_vga_text_char
 {
   short ascii_code		: 8;
   short fg_color_rgb		: 3;
   short fg_color_intensity	: 1;
   short bg_color_rgb		: 3;
   short bg_color_intensity	: 1;
-} __attribute__((packed)) t_vga_text_char;
+} __attribute__((packed));
+
+typedef union	u_vga_text_char
+{
+  struct s_vga_text_char vga;
+  char			 byte;
+}		t_vga_text_char;
 
 /*
  * @Todo: initialize other registers.
@@ -64,14 +70,14 @@ void	printk_framebuffer(const char *msg)
   t_vga_text_char	c;
   int			i;
 
-  c.fg_color_rgb = 7;
-  c.fg_color_intensity = 0;
-  c.bg_color_rgb = 0;
-  c.bg_color_intensity = 0;
+  c.vga.fg_color_rgb = 7;
+  c.vga.fg_color_intensity = 0;
+  c.vga.bg_color_rgb = 0;
+  c.vga.bg_color_intensity = 0;
   i = 0;
   while (*msg)
     {
-      c.ascii_code = *msg;
+      c.vga.ascii_code = *msg;
       *((t_vga_text_char*)FRAMEBUFFER + i) = c;
       ++msg;
       ++i;
@@ -107,6 +113,6 @@ void    yolomain()
   init();
   while (1)
     {
-      printk("Yolooo !");
+      printk("Yolooo ! ");
     }
 }
