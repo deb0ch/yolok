@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Sun May 24 20:55:49 2015 chauvo_t
-** Last update Wed Jun  3 15:59:47 2015 chauvo_t
+** Last update Sat Jun  6 12:15:29 2015 chauvo_t
 */
 
 #ifndef UTILS_H_
@@ -18,9 +18,9 @@ static inline void	outb(short port, char val)
 	       : "a" (val), "d" (port));
 }
 
-static inline short	inb(short port)
+static inline char	inb(short port)
 {
-  short	res;
+  char	res;
 
   asm volatile("inb %1, %0\n"
 	       : "=a" (res)
