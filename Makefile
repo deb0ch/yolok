@@ -1,11 +1,11 @@
 ##
-## Makefile<kfs-chauvo_t> for YoloKernel in /home/chauvo_t/Programming/Work_in_progress/Kernel/kernel_from_scratch/kfs-chauvo_t
-## 
+## Makefile<kfs-chauvo_t> for YoloKernel in yolok/
+##
 ## Made by chauvo_t
 ## Login   <chauvo_t@epitech.net>
-## 
+##
 ## Started on  Fri May 22 15:19:03 2015 chauvo_t
-## Last update Fri Jun 12 13:46:41 2015 chauvo_t
+## Last update Fri Jul 10 17:23:29 2015 chauvo_t
 ##
 
 CXX			:= gcc
@@ -13,20 +13,10 @@ QEMU			:= qemu-system-x86_64 -append "root=/dev/sda console=ttyS0" -serial stdio
 
 SRCDIR			:= src
 OBJDIR			:= build
-HDRDIR			:= include
 
-SRCS			:=	main.c			\
-				utils.c			\
-				crt0.S
-
-OBJS			:= $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
-OBJS			:= $(OBJS:.S=.o)
-SRCS			:= $(addprefix $(SRCDIR)/, $(SRCS))
-
-DEPS			:= $(OBJS:.o=.d)
-
-CFLAGS			+= -Wextra -Wall -W
-CFLAGS			+= $(addprefix -I./, $(HDRDIR))
+CFLAGS			:=
+CFLAGS			+= $(addprefix -I./, $(addprefix $(SRCDIR)/, $(SUBDIRS)))
+CFLAGS			+= -W -Wall -Wextra
 CFLAGS			+= -MD
 CFLAGS			+= -m32 -nostdinc -fno-builtin -fno-stack-protector
 CFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
@@ -38,12 +28,27 @@ LDFLAGS			+= -nostdlib -fno-stack-protector
 LDFLAGS			+= -m32 -Wl,--build-id=none
 debug: LDFLAGS		+= -g -g3 -ggdb
 
+#Sources (SRCS) definition and subdirectories creation is handle in submodules.
+include $(SRCDIR)/module.mk
+
+OBJS			:= $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
+
+SRCS			:= $(addprefix $(SRCDIR)/, $(SRCS))
+
+OBJS			:= $(OBJS:.S=.o)
+
+DEPS			:= $(OBJS:.o=.d)
+
 TMPS			:= $(OBJS) $(OBJS:.o=.d)
 
 VDISK			:= disk.img
 NAME			:= yolok
 
 all:		$(NAME)
+
+test:
+	@echo $(SRCS)
+	@echo $(CFLAGS)
 
 boot: all
 	$(QEMU) -kernel $(NAME) # -hda $(VDISK)
@@ -65,7 +70,11 @@ $(NAME):	$(OBJS)
 $(OBJS):	| $(OBJDIR)
 
 $(OBJDIR):
-	mkdir -p $(OBJDIR)
+	@mkdir -p $(OBJDIR)
+	@for dir in $(SUBDIRS);			\
+	do					\
+		mkdir -p $(OBJDIR)/$$dir;	\
+	done
 
 clean:
 	@rm -f $(TMPS)
