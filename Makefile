@@ -5,7 +5,7 @@
 ## Login   <chauvo_t@epitech.net>
 ##
 ## Started on  Fri May 22 15:19:03 2015 chauvo_t
-## Last update Fri Jul 10 17:23:29 2015 chauvo_t
+## Last update Fri Jul 10 17:39:24 2015 chauvo_t
 ##
 
 CXX			:= gcc
@@ -16,7 +16,7 @@ OBJDIR			:= build
 
 CFLAGS			:=
 CFLAGS			+= $(addprefix -I./, $(addprefix $(SRCDIR)/, $(SUBDIRS)))
-CFLAGS			+= -W -Wall -Wextra
+CFLAGS			+= -W -Wall -Wextra -Werror
 CFLAGS			+= -MD
 CFLAGS			+= -m32 -nostdinc -fno-builtin -fno-stack-protector
 CFLAGS			+= -mno-mmx -mno-3dnow -mno-sse

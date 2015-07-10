@@ -5,20 +5,13 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Sun May 24 19:48:29 2015 chauvo_t
-** Last update Sun May 24 20:50:38 2015 chauvo_t
+** Last update Thu Jun 25 20:40:46 2015 chauvo_t
 */
 
 #ifndef SERIAL_H_
 # define SERIAL_H_
 
-/* typedefs that the insideout headers need */
-# ifndef LOW8
-#  define LOW8(a)	((unsigned char)(a & 0xff))
-# endif
-
-# ifndef HIGH8
-#  define HIGH8(a)	((unsigned char)((a & 0xff00) >> 8))
-# endif
+# include "types.h"
 
 # define BAUDRATE(x)	(115200 / x)
 
@@ -45,39 +38,41 @@
 # define LCR_BITS_7	0x02	// 7 bits/char
 # define LCR_BITS_8	0x03	// 8 bits/char
 
-struct	s_lcr_register
+struct	lcr_register
 {
-  char		word_len	: 2;
-  char		stop		: 1;
-  char		set_parity	: 1;
-  char		even_parity	: 1;
-  char		stick_parity	: 1;
-  char		set_tx_break	: 1;
-  char		dlab		: 1;
+	uint8_t		word_len	: 2;
+	uint8_t		stop		: 1;
+	uint8_t		set_parity	: 1;
+	uint8_t		even_parity	: 1;
+	uint8_t		stick_parity	: 1;
+	uint8_t		set_tx_break	: 1;
+	uint8_t		dlab		: 1;
 } __attribute__((packed));
 
-typedef union	u_lcr_register
+typedef union
 {
-  struct s_lcr_register reg;
-  char			byte;
-}		t_lcr_register;
+	struct lcr_register	reg;
+	uint8_t			byte;
+}		lcr_register_t;
 
-struct	s_lsr_register
+struct	lsr_register
 {
-  char		data_available	: 1;
-  char		overrun_error	: 1;
-  char		parity_error	: 1;
-  char		framing_error	: 1;
-  char		brk_sig_received: 1;
-  char		thr_empty	: 1;
-  char		thr_empty_idle	: 1;
-  char		err_fifo	: 1;
+	uint8_t		data_available		: 1;
+	uint8_t		overrun_error		: 1;
+	uint8_t		parity_error		: 1;
+	uint8_t		framing_error		: 1;
+	uint8_t		brk_sig_received	: 1;
+	uint8_t		thr_empty		: 1;
+	uint8_t		thr_empty_idle		: 1;
+	uint8_t		err_fifo		: 1;
 } __attribute__((packed));
 
-typedef union	u_lsr_register
+typedef union
 {
-  struct s_lsr_register reg;
-  char			byte;
-}		t_lsr_register;
+	struct lsr_register	reg;
+	uint8_t			byte;
+}		lsr_register_t;
+
+void	init_serial_port(int port);
 
 #endif /* !SERIAL_H_ */
