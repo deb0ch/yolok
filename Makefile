@@ -5,33 +5,22 @@
 ## Login   <chauvo_t@epitech.net>
 ##
 ## Started on  Fri May 22 15:19:03 2015 chauvo_t
-## Last update Sat Jul 11 12:48:28 2015 chauvo_t
+## Last update Sun Jul 12 13:38:31 2015 chauvo_t
 ##
 
 CXX			:= gcc
+RM			:= rm -rf
 QEMU			:= qemu-system-x86_64 -append "root=/dev/sda console=ttyS0" -serial stdio
 
 SRCDIR			:= src
 OBJDIR			:= build
 
-# Yes, this line is needed.
-CFLAGS			:=
-CFLAGS			+= -W -Wall -Wextra -Werror
-CFLAGS			+= -MD
-CFLAGS			+= -m32 -nostdinc -fno-builtin -fno-stack-protector
-CFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
-debug: CFLAGS		+= -g -g3 -ggdb
-
-# Yes, this line is needed.
-LDFLAGS			:=
-LDFLAGS			+= -T kfs.ld
-LDFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
-LDFLAGS			+= -nostdlib -fno-stack-protector
-LDFLAGS			+= -m32 -Wl,--build-id=none
-debug: LDFLAGS		+= -g -g3 -ggdb
-
-# Yes, this line is needed.
+# These lines are needed to set immediate evaluation for
+# these variables, instead of deferred evaluation which is unsuitable.
 SRCS			:=
+SUBDIRS			:=
+CFLAGS			:=
+LDFLAGS			:=
 
 include $(SRCDIR)/module.mk
 
@@ -45,10 +34,28 @@ DEPS			:= $(OBJS:.o=.d)
 
 TMPS			:= $(OBJS) $(OBJS:.o=.d)
 
+CFLAGS			+= -W -Wall -Wextra -Werror
+CFLAGS			+= -MD
+CFLAGS			+= -m32 -nostdinc -fno-builtin -fno-stack-protector
+CFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
+debug: CFLAGS		+= -g -g3 -ggdb
+CFLAGS			+= $(addprefix -I./$(SRCDIR)/, $(SUBDIRS))
+
+LDFLAGS			+= -T kfs.ld
+LDFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
+LDFLAGS			+= -nostdlib -fno-stack-protector
+LDFLAGS			+= -m32 -Wl,--build-id=none
+debug: LDFLAGS		+= -g -g3 -ggdb
+
 VDISK			:= disk.img
+
 NAME			:= yolok
 
-all: $(NAME)
+all: showflags $(NAME)
+
+showflags:
+	@printf "[\033[0;32mCompiler flags\033[0m] % 50s\n" | tr ' ' '.'
+	@echo $(CFLAGS)
 
 boot: all
 	$(QEMU) -kernel $(NAME) # -hda $(VDISK)
@@ -58,23 +65,21 @@ debug:	re
 
 -include $(DEPS)
 
-$(OBJDIR)/%.o:	$(SRCDIR)/%.S
+$(OBJDIR)/%.o: $(SRCDIR)/%.S
 	@printf "[\033[0;32mCompiling\033[0m] % 55s\n" $< | tr ' ' '.'
 	@$(COMPILE.c) $(OUTPUT_OPTION) $<
 
-$(OBJDIR)/%.o:	$(SRCDIR)/%.c
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@printf "[\033[0;32mCompiling\033[0m] % 55s\n" $< | tr ' ' '.'
 	@$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 $(NAME): $(OBJS)
-	@printf "[\033[0;32mCompiler flags\033[0m] % 50s\n" | tr ' ' '.'
-	@echo $(CFLAGS)
 	@printf "[\033[0;34mLinker flags\033[0m] % 52s\n" | tr ' ' '.'
 	@echo $(LDFLAGS)
 	@printf "[\033[0;34mLinking\033[0m] % 57s\n" $(NAME) | tr ' ' '.'
 	@$(CXX) $(OBJS) -o $(NAME) $(LDFLAGS)
 
-$(OBJS):	| $(OBJDIR)
+$(OBJS): | $(OBJDIR)
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
@@ -84,17 +89,18 @@ $(OBJDIR):
 	done
 
 clean:
-	@rm -f $(TMPS)
+	@$(RM) $(TMPS)
 	@printf "[\033[0;31mDeleted\033[0m] % 57s\n" $(OBJS) | tr ' ' '.'
 
-fclean:	clean
-	@rm -f $(NAME)
+fclean: clean
+	@$(RM) $(NAME)
+	@$(RM) $(OBJDIR)
 	@printf "[\033[0;35mRemoved\033[0m] % 57s\n" $(NAME) | tr ' ' '.'
 
 re:	fclean all
 
 mkdisk:
-	rm -f $(VDISK)
+	$(RM) $(VDISK)
 	dd if=/dev/zero of=$(VDISK) bs=1M count=16
 	mkfs.ext4 $(VDISK) -L root
 

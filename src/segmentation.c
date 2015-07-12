@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 16:00:42 2015 chauvo_t
-** Last update Fri Jul 10 17:45:21 2015 chauvo_t
+** Last update Sun Jul 12 12:56:53 2015 chauvo_t
 */
 
 #include "segmentation.h"

@@ -5,10 +5,10 @@
 ## Login   <chauvo_t@epitech.net>
 ## 
 ## Started on  Fri Jul 10 16:07:51 2015 chauvo_t
-## Last update Fri Jul 10 17:16:23 2015 chauvo_t
+## Last update Sun Jul 12 13:29:06 2015 chauvo_t
 ##
 
-THIS_DIR_L1	:= stdio
+THIS_DIR_L0	:= stdio
 
 MOD_SRC		:=	printf.c			\
 			printf_format_specifiers1.c	\
@@ -20,6 +20,6 @@ MOD_SRC		:=	printf.c			\
 			putunsint_base.c		\
 			putunslong_base.c		\
 
-SRCS		+= $(addprefix $(THIS_DIR_L1)/, $(MOD_SRC))
+SRCS		+= $(addprefix $(THIS_DIR_L0)/, $(MOD_SRC))
 
-CFLAGS		+= -I$(THIS_DIR_L0)/$(THIS_DIR_L1)
+SUBDIRS		+= $(THIS_DIR_L0)/inc

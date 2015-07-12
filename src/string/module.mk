@@ -5,10 +5,10 @@
 ## Login   <chauvo_t@epitech.net>
 ## 
 ## Started on  Fri Jul 10 16:36:51 2015 chauvo_t
-## Last update Fri Jul 10 17:38:56 2015 chauvo_t
+## Last update Sun Jul 12 13:29:24 2015 chauvo_t
 ##
 
-THIS_DIR_L1	:= string
+THIS_DIR_L0	:= string
 
 MOD_SRC	:=	memset.c	\
 		strcat.c	\
@@ -16,6 +16,6 @@ MOD_SRC	:=	memset.c	\
 		strcpy.c	\
 		strlen.c	\
 
-SRCS	+=	$(addprefix $(THIS_DIR_L1)/, $(MOD_SRC))
+SRCS	+=	$(addprefix $(THIS_DIR_L0)/, $(MOD_SRC))
 
-CFLAGS		+= -I$(THIS_DIR_L0)/$(THIS_DIR_L1)
+SUBDIRS		+= $(THIS_DIR_L0)/inc
