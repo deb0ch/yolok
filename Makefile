@@ -5,7 +5,7 @@
 ## Login   <chauvo_t@epitech.net>
 ##
 ## Started on  Fri May 22 15:19:03 2015 chauvo_t
-## Last update Sun Jul 12 13:38:31 2015 chauvo_t
+## Last update Sun Jul 12 17:18:25 2015 chauvo_t
 ##
 
 CXX			:= gcc
@@ -35,6 +35,7 @@ DEPS			:= $(OBJS:.o=.d)
 TMPS			:= $(OBJS) $(OBJS:.o=.d)
 
 CFLAGS			+= -W -Wall -Wextra -Werror
+CFLAGS			+= -O2
 CFLAGS			+= -MD
 CFLAGS			+= -m32 -nostdinc -fno-builtin -fno-stack-protector
 CFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
@@ -54,7 +55,7 @@ NAME			:= yolok
 all: showflags $(NAME)
 
 showflags:
-	@printf "[\033[0;32mCompiler flags\033[0m] % 50s\n" | tr ' ' '.'
+	@printf "[\033[0;33mCompiler flags\033[0m] %s\n"
 	@echo $(CFLAGS)
 
 boot: all
@@ -66,17 +67,17 @@ debug:	re
 -include $(DEPS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.S
-	@printf "[\033[0;32mCompiling\033[0m] % 55s\n" $< | tr ' ' '.'
+	@printf "[\033[0;32mCompiling\033[0m] %s\n" $<
 	@$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@printf "[\033[0;32mCompiling\033[0m] % 55s\n" $< | tr ' ' '.'
+	@printf "[\033[0;32mCompiling\033[0m] %s\n" $<
 	@$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 $(NAME): $(OBJS)
-	@printf "[\033[0;34mLinker flags\033[0m] % 52s\n" | tr ' ' '.'
+	@printf "[\033[0;33mLinker flags\033[0m] %s\n"
 	@echo $(LDFLAGS)
-	@printf "[\033[0;34mLinking\033[0m] % 57s\n" $(NAME) | tr ' ' '.'
+	@printf "[\033[0;34mLinking\033[0m] %s\n" $(NAME)
 	@$(CXX) $(OBJS) -o $(NAME) $(LDFLAGS)
 
 $(OBJS): | $(OBJDIR)
@@ -90,12 +91,13 @@ $(OBJDIR):
 
 clean:
 	@$(RM) $(TMPS)
-	@printf "[\033[0;31mDeleted\033[0m] % 57s\n" $(OBJS) | tr ' ' '.'
+	@printf "[\033[0;31mDeleted\033[0m] %s\n" $(OBJS)
 
 fclean: clean
 	@$(RM) $(NAME)
 	@$(RM) $(OBJDIR)
-	@printf "[\033[0;35mRemoved\033[0m] % 57s\n" $(NAME) | tr ' ' '.'
+	@printf "[\033[0;35mRemoved\033[0m] %s\n" $(NAME)
+	@printf "[\033[0;35mRemoved\033[0m] %s\n" $(OBJDIR)
 
 re:	fclean all
 
