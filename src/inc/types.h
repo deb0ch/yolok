@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 17:54:29 2015 chauvo_t
-** Last update Tue Jul  7 21:28:13 2015 chauvo_t
+** Last update Wed Jul 22 11:10:06 2015 deb0ch
 */
 
 #ifndef TYPES_H_
@@ -18,6 +18,9 @@ typedef	char		int8_t;
 typedef	unsigned int	uint32_t;
 typedef	unsigned short	uint16_t;
 typedef	unsigned char	uint8_t;
+
+typedef	unsigned long	size_t;
+typedef	long		ssize_t;
 
 # define NULL 0
 

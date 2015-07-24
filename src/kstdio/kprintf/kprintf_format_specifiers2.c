@@ -5,10 +5,11 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Tue Jul  7 21:26:26 2015 chauvo_t
-** Last update Sun Jul 12 16:56:48 2015 chauvo_t
+** Last update Thu Jul 23 16:01:07 2015 deb0ch
 */
 
 #include "stdarg.h"
+#include "kprintf.h"
 #include "kstdio.h"
 #include "string.h"
 #include "types.h"

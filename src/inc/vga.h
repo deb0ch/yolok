@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 15:28:07 2015 chauvo_t
-** Last update Thu Jun 25 20:41:35 2015 chauvo_t
+** Last update Fri Jul 24 13:55:16 2015 deb0ch
 */
 
 #ifndef VGA_H_
@@ -13,8 +13,12 @@
 
 # define VGA_BASE		(char*)0xb8000
 
-# define VGA_COL                (int)80
-# define VGA_LINES              (int)25
+# define VGA_WIDTH		(int)80
+# define VGA_HEIGHT		(int)25
+
+# define VGA_COORD(x, y)	(int)((x) + (y) * VGA_WIDTH)
+# define VGA_ROW(c)		(int)((c) / VGA_WIDTH)
+# define VGA_COL(c)		(int)((c) % VGA_WIDTH)
 
 # define VGA_BLACK		0
 # define VGA_BLUE		1
@@ -35,17 +39,24 @@
 
 struct s_vga_text_char
 {
-  short ascii_code		: 8;
-  short fg_color_rgb		: 3;
-  short fg_color_intensity	: 1;
-  short bg_color_rgb		: 3;
-  short bg_color_intensity	: 1;
+	uint8_t ascii;
+	union
+	{
+		uint8_t byte;
+		struct
+		{
+			uint8_t fg_color_rgb		: 3;
+			uint8_t fg_color_intensity	: 1;
+			uint8_t bg_color_rgb		: 3;
+			uint8_t bg_color_intensity	: 1;
+		};
+	} color;
 } __attribute__((packed));
 
 typedef union	u_vga_text_char
 {
-  struct s_vga_text_char vga;
-  char			 byte;
+	struct s_vga_text_char	vga;
+	uint16_t		raw;
 }		vga_text_char_t;
 
 #endif /* !VGA_H_ */

@@ -5,12 +5,14 @@
 ## Login   <chauvo_t@epitech.net>
 ## 
 ## Started on  Fri Jul 10 16:36:51 2015 chauvo_t
-## Last update Sun Jul 12 13:29:24 2015 chauvo_t
+## Last update Thu Jul 23 16:06:54 2015 deb0ch
 ##
 
 THIS_DIR_L0	:= string
 
-MOD_SRC	:=	memset.c	\
+MOD_SRC	:=	memcpy.c	\
+		memset.c	\
+		memmove.c	\
 		strcat.c	\
 		strcmp.c	\
 		strcpy.c	\

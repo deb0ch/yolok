@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 16:00:18 2015 chauvo_t
-** Last update Tue Jul  7 19:17:29 2015 chauvo_t
+** Last update Sun Jul 19 20:23:26 2015 deb0ch
 */
 
 #ifndef SEGMENTATION_H_
@@ -15,6 +15,30 @@
 
 # define GDT_SIZE 3
 # define MAX_MEM_SIZE (unsigned int)-1;
+
+# define SEGMENTS_BASE		0
+# define SEGMENTS_SIZE		0xFFFFFFFF
+# define GDT_ENTRIES		16
+
+# define RING_LVL_0		0 << 5
+# define RING_LVL_1		1 << 5
+# define RING_LVL_2		2 << 5
+# define RING_LVL_3		3 << 5
+
+# define SEG_PRESENT		1 << 7
+# define SEG_NOT_PRESENT	0 << 7
+
+# define DTYPE_S_SYS		0 << 4
+# define DTYPE_S_CODE		1 << 4
+
+# define TYPE_DATA_RO		0
+# define TYPE_DATA_RW		2
+# define TYPE_DATA_RO_ED	4
+# define TYPE_DATA_RW_ED	6
+# define TYPE_CODE_EO		8
+# define TYPE_CODE_ER		10
+# define TYPE_CODE_EO_C		12
+# define TYPE_CODE_ER_C		14
 
 /*
  * Cf. Intel Manual Vol. 3A 3-9 (2007)
@@ -54,7 +78,11 @@ struct gdt_register
 	uint32_t	base;
 };
 
-int	set_gdt_entry(int n, uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity);
+void	set_gdt_entry(uint32_t index,
+		      uint32_t base,
+		      uint32_t limit,
+		      uint8_t access,
+		      uint8_t granularity);
 void	init_flat_gdt(void);
 
 #endif /* !SEGMENTATION_H_ */

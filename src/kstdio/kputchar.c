@@ -5,10 +5,10 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Sun Jul 12 16:00:56 2015 chauvo_t
-** Last update Sun Jul 12 16:01:16 2015 chauvo_t
+** Last update Wed Jul 22 11:23:11 2015 deb0ch
 */
 
-#include "printk.h"
+#include "kwrite.h"
 
 int	kputchar(char c)
 {
@@ -16,6 +16,6 @@ int	kputchar(char c)
 
 	*buf = c;
 	buf[1] = 0;
-	printk(buf);
+	kwrite(KWRITE_ALL, buf, 1);
 	return 1;
 }
