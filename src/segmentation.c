@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 16:00:42 2015 chauvo_t
-** Last update Wed Jul 22 10:21:48 2015 deb0ch
+** Last update Thu Oct 29 16:38:28 2015 chauvo_t
 */
 
 #include "segmentation.h"
@@ -29,21 +29,27 @@ static inline void load_gdt(struct gdt_register *gdtr)
 static inline void load_segments_selectors(void)
 {
 	disable_interrupt();
-	/* Pos new Data Segment = base GDT + index Data sgement
-	   Pos Data descriptor = base GDT [ 2 ] */
-	/* TI = 0 for GDT selected, and RPL = 0 for Ring 0 Privilege */
-	/* Therefore Segment selector has to be set from ax like this:
-	   ax = 0b10 | TI | (RPL & 0b11) => (bin) 0b10 000 <=> (hex) 0x10 */
+	/*
+	 * Pos new Data Segment = base GDT + index Data sgement
+	 * Pos Data descriptor = base GDT [ 2 ]
+	 * Therefore, first part of each segment selector should be 2 (0b10)
+	 * TI: Table Indicator. Says either gdt or ldt should be used.
+	 * RPL: Ring Privilege Level.
+	 * ldt is like gdt, but local to a process. Deprecated and not used in modern systems.
+	 * TI = 0 for GDT selected, and RPL = 0 for Ring 0 Privilege
+	 * Therefore Segment selector has to be set from ax like this:
+	 * ax = 0b10 | TI | (RPL & 0b11) => (bin) 0b10 000 <=> (hex) 0x10
+	 */
 	asm volatile ("movw $0x10, %ax \n\t"
 		      "movw %ax, %ds \n\t"
 		      "movw %ax, %es \n\t"
 		      "movw %ax, %fs \n\t"
 		      "movw %ax, %gs \n\t"
 		      "movw %ax, %ss \n\t");
-	/* Code Segment Reloading */
-	asm volatile ("pushl $0x08 \n\t" /*Far push to set CS to index 0x08 (after Null desc)*/
-		      "pushl $1f \n\t" /*Far push to set EIP after ret. label 1 f(orward)*/
-		      "lret \n\t"
+	/* Code Segment Reloading: only CS needs reloading (Whaaaat ?!? This is WTF x86 yolo) */
+	asm volatile ("pushl $0x08 \n\t" /* Far push to set CS to index 0x08 (after Null desc) */
+		      "pushl $1f \n\t"   /* Far push to set EIP after ret. label 1 f(orward) */
+		      "lret \n\t"	 /* lret: pop eip AND a new value for CS on the stack */
 		      "1:");
 }
 
