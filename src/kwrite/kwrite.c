@@ -5,12 +5,12 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 15:26:35 2015 chauvo_t
-** Last update Wed Jul 22 20:43:17 2015 deb0ch
+** Last update Thu Nov 26 20:47:57 2015 chauvo_t
 */
 
 #include "kwrite.h"
 #include "serial.h"
-#include "utils.h"
+#include "asm_utils.h"
 
 unsigned g_kwrite_default = KWRITE_ALL;
 

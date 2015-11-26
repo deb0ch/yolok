@@ -1,15 +1,15 @@
 /*
-** utils.h for yolok in yolok/src
+** asm_utils.h for yolok in yolok/src
 **
 ** Made by chauvo_t
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Sun May 24 20:55:49 2015 chauvo_t
-** Last update Sun Jul 19 20:42:29 2015 deb0ch
+** Last update Thu Nov 26 20:46:14 2015 chauvo_t
 */
 
-#ifndef UTILS_H_
-# define UTILS_H_
+#ifndef ASM_UTILS_H_
+# define ASM_UTILS_H_
 
 # include "types.h"
 
@@ -82,6 +82,15 @@ static inline void enable_interrupt()
 	asm volatile("sti");
 }
 
-void	vga_clr();
+/*
+ * REP NOP (PAUSE) is a good thing to insert into busy-wait loops.
+ * The rep; nop instruction sequence is actually equivalent to the
+ * `pause` instruction, not supported by all assemblers, in the
+ * generated machine code.
+ */
+static inline void cpu_relax(void)
+{
+	asm volatile("rep; nop" ::: "memory");
+}
 
-#endif /* !UTILS_H_ */
+#endif /* !ASM_UTILS_H_ */

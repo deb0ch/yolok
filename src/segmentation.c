@@ -5,12 +5,12 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 16:00:42 2015 chauvo_t
-** Last update Thu Oct 29 16:38:28 2015 chauvo_t
+** Last update Thu Nov 26 20:47:28 2015 chauvo_t
 */
 
 #include "segmentation.h"
 #include "string.h"
-#include "utils.h"
+#include "asm_utils.h"
 
 gdt_entry_t		g_gdt[GDT_SIZE];
 struct gdt_register	g_gdtr;
