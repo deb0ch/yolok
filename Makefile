@@ -5,10 +5,11 @@
 ## Login   <chauvo_t@epitech.net>
 ##
 ## Started on  Fri May 22 15:19:03 2015 chauvo_t
-## Last update Sun Jul 19 19:23:45 2015 deb0ch
+## Last update Thu Nov  5 18:16:15 2015 chauvo_t
 ##
 
-CXX			:= gcc
+CC			:= clang
+LD			:= ld
 QEMU			:= qemu-system-x86_64 -append "root=/dev/sda console=ttyS0" -serial stdio
 
 SRCDIR			:= src
@@ -42,9 +43,9 @@ debug: CFLAGS		+= -g -g3 -ggdb
 CFLAGS			+= $(addprefix -I./$(SRCDIR)/, $(SUBDIRS))
 
 LDFLAGS			+= -T kfs.ld
-LDFLAGS			+= -mno-mmx -mno-3dnow -mno-sse
-LDFLAGS			+= -nostdlib -fno-stack-protector
-LDFLAGS			+= -m32 -Wl,--build-id=none
+LDFLAGS			+= -nostdlib
+LDFLAGS			+= --build-id=none
+LDFLAGS			+= -melf_i386
 debug: LDFLAGS		+= -g -g3 -ggdb
 
 VDISK			:= disk.img
@@ -73,7 +74,7 @@ $(NAME): $(OBJS)
 	@printf "[\033[0;33mLinker flags\033[0m] %s\n"
 	@echo $(LDFLAGS)
 	@printf "[\033[0;34mLinking\033[0m] %s\n" $(NAME)
-	@$(CXX) $(OBJS) -o $(NAME) $(LDFLAGS)
+	@$(LD) $(OBJS) -o $(NAME) $(LDFLAGS)
 	@printf "[\033[0;35mDONE\033[0m]\n" $(NAME)
 
 $(OBJS): | $(OBJDIR)
@@ -103,5 +104,11 @@ mkdisk:
 	rm -rf $(VDISK)
 	dd if=/dev/zero of=$(VDISK) bs=1M count=16
 	mkfs.ext4 $(VDISK) -L root
+
+showflags:
+	@printf "[\033[0;33mCompiler flags\033[0m] %s\n"
+	@echo $(CFLAGS)
+	@printf "[\033[0;33mLinker flags\033[0m] %s\n"
+	@echo $(LDFLAGS)
 
 .PHONY:	all clean fclean re showflags
