@@ -5,13 +5,15 @@
 ## Login   <chauvo_t@epitech.net>
 ## 
 ## Started on  Fri Jul 10 16:04:33 2015 chauvo_t
-## Last update Wed Jul 22 12:11:18 2015 deb0ch
+## Last update Mon Dec 14 20:51:20 2015 chauvo_t
 ##
 
-SRCS		:=	crt0.S		\
-			main.c		\
-			segmentation.c	\
-			serial.c	\
+SRCS		:=	crt0.S			\
+			interrupts.c		\
+			interrupt_handlers.s	\
+			main.c			\
+			segmentation.c		\
+			serial.c		\
 			utils.c
 
 SUBDIRS		+=	inc		\

@@ -5,14 +5,16 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 16:00:42 2015 chauvo_t
-** Last update Thu Nov 26 20:47:28 2015 chauvo_t
+** Last update Thu Dec 17 15:26:55 2015 chauvo_t
 */
 
 #include "segmentation.h"
 #include "string.h"
 #include "asm_utils.h"
 
-gdt_entry_t		g_gdt[GDT_SIZE];
+#include "kstdio.h"
+
+struct gdt_entry	g_gdt[GDT_SIZE];
 struct gdt_register	g_gdtr;
 
 static inline void load_gdt(struct gdt_register *gdtr)
@@ -68,21 +70,20 @@ void	set_gdt_entry(uint32_t index,
 		      uint8_t access,
 		      uint8_t granularity)
 {
-	memset(&g_gdt[index], 0, sizeof(gdt_entry_t));
-
+	memset(&g_gdt[index], 0, sizeof(struct gdt_entry));
       	g_gdt[index].limit_low	 = limit & 0x0000FFFF;
 	g_gdt[index].base_low	 = base & 0x0000FFFF;
-	g_gdt[index].base_mid	 = base & 0x00FF0000;
-	g_gdt[index].type	 = access & 0xF0;
-	g_gdt[index].s		 = access & 0x08;
-	g_gdt[index].dpl	 = access & 0x06;
-	g_gdt[index].p		 = access & 0x01;
-	g_gdt[index].limit_high	 = limit & 0xFFFF0000;
+	g_gdt[index].base_mid	 = (base >> 16) & 0xFF;
+	g_gdt[index].type	 = access & 0x0F;
+	g_gdt[index].s		 = (access & DTYPE_S_CODE) ? 1 : 0;
+	g_gdt[index].dpl	 = (access & 0x60) >> 5;
+	g_gdt[index].p		 = (access & SEG_PRESENT) ? 1 : 0;
+	g_gdt[index].limit_high	 = (limit >> 16) & 0xFF;
 	g_gdt[index].avl	 = 0x0;
 	g_gdt[index].l		 = 0x0;
 	g_gdt[index].d_b	 = 0x1;
 	g_gdt[index].g		 = granularity;
-	g_gdt[index].base_high	 = base & 0xFF000000;
+	g_gdt[index].base_high	 = (base >> 24) & 0xFF;
 }
 
 /*
@@ -93,9 +94,9 @@ void	init_flat_gdt(void)
 {
 	uint8_t		access = 0;
 
-	g_gdtr.limit = GDT_SIZE * sizeof(gdt_entry_t);
-	g_gdtr.base = (typeof(g_gdtr.base))&g_gdt;
-	memset(&g_gdt, 0, sizeof(g_gdt));
+	g_gdtr.limit = (GDT_SIZE * sizeof(struct gdt_entry)) - 1;
+	g_gdtr.base = (uint32_t)&g_gdt;
+	memset(&g_gdt, 0, sizeof(g_gdt) * GDT_SIZE);
 
 	/* NULL Segment */
 	access = RING_LVL_0 | SEG_NOT_PRESENT | DTYPE_S_CODE | TYPE_DATA_RO;

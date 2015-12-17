@@ -5,7 +5,7 @@
 ## Login   <chauvo_t@epitech.net>
 ##
 ## Started on  Fri May 22 15:19:03 2015 chauvo_t
-## Last update Thu Nov  5 18:16:15 2015 chauvo_t
+## Last update Thu Dec 17 11:25:59 2015 chauvo_t
 ##
 
 CC			:= clang
@@ -29,6 +29,7 @@ OBJS			:= $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 SRCS			:= $(addprefix $(SRCDIR)/, $(SRCS))
 
 OBJS			:= $(OBJS:.S=.o)
+OBJS			:= $(OBJS:.s=.o)
 
 DEPS			:= $(OBJS:.o=.d)
 
@@ -61,6 +62,10 @@ debug:	re
 	$(QEMU) -kernel $(NAME) -s -S # -hda $(VDISK)
 
 -include $(DEPS)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.s
+	@printf "[\033[0;32mCompiling\033[0m] %s\n" $<
+	@nasm -f elf32 $(OUTPUT_OPTION) $< 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.S
 	@printf "[\033[0;32mCompiling\033[0m] %s\n" $<
@@ -110,5 +115,8 @@ showflags:
 	@echo $(CFLAGS)
 	@printf "[\033[0;33mLinker flags\033[0m] %s\n"
 	@echo $(LDFLAGS)
+
+showsrc:
+	@echo $(SRCS)
 
 .PHONY:	all clean fclean re showflags

@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Sun May 24 20:55:49 2015 chauvo_t
-** Last update Thu Nov 26 20:46:14 2015 chauvo_t
+** Last update Fri Nov 27 11:50:35 2015 chauvo_t
 */
 
 #ifndef ASM_UTILS_H_
@@ -86,7 +86,7 @@ static inline void enable_interrupt()
  * REP NOP (PAUSE) is a good thing to insert into busy-wait loops.
  * The rep; nop instruction sequence is actually equivalent to the
  * `pause` instruction, not supported by all assemblers, in the
- * generated machine code.
+ * generated machine opcodes.
  */
 static inline void cpu_relax(void)
 {
