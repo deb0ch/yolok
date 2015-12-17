@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Jun 25 16:00:42 2015 chauvo_t
-** Last update Thu Dec 17 15:26:55 2015 chauvo_t
+** Last update Thu Dec 17 21:56:09 2015 chauvo_t
 */
 
 #include "segmentation.h"
@@ -30,7 +30,6 @@ static inline void load_gdt(struct gdt_register *gdtr)
 
 static inline void load_segments_selectors(void)
 {
-	disable_interrupt();
 	/*
 	 * Pos new Data Segment = base GDT + index Data sgement
 	 * Pos Data descriptor = base GDT [ 2 ]

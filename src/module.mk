@@ -5,10 +5,11 @@
 ## Login   <chauvo_t@epitech.net>
 ## 
 ## Started on  Fri Jul 10 16:04:33 2015 chauvo_t
-## Last update Mon Dec 14 20:51:20 2015 chauvo_t
+## Last update Thu Dec 17 21:07:33 2015 chauvo_t
 ##
 
 SRCS		:=	crt0.S			\
+			irq.c			\
 			interrupts.c		\
 			interrupt_handlers.s	\
 			main.c			\

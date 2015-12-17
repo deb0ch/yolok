@@ -5,10 +5,11 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Fri Nov 20 11:30:53 2015 chauvo_t
-** Last update Thu Dec 17 15:46:32 2015 chauvo_t
+** Last update Thu Dec 17 22:17:08 2015 chauvo_t
 */
 
 #include "asm_utils.h"
+#include "irq.h"
 #include "interrupts.h"
 #include "kstdio.h"
 #include "string.h"
@@ -28,7 +29,7 @@ void	interrupts_init()
 	{
 		g_interrupt_handlers[i] = &isr_dummy_handler;
 	}
-	disable_interrupt();
+	g_interrupt_handlers[33] = isr_keyboard_handler; // handle keyboard inputs
 	interrupts_set_isr(0, &isr0, ISR_KERNEL);
 	interrupts_set_isr(1, &isr1, ISR_KERNEL);
 	interrupts_set_isr(2, &isr2, ISR_KERNEL);
@@ -62,7 +63,8 @@ void	interrupts_init()
 	interrupts_set_isr(30, &isr30, ISR_KERNEL);
 	interrupts_set_isr(31, &isr31, ISR_KERNEL);
 	load_idt(&g_idtr_register);
-	/* enable_interrupt(); */
+	irq_init();
+	enable_interrupt();
 }
 
 /*
@@ -92,8 +94,15 @@ void load_idt(struct idtr_register *idtr)
 
 int	interrupts_handler(struct isr_context *context)
 {
+	int ret;
+
 	if (g_interrupt_handlers[context->interrupt_id])
-		return g_interrupt_handlers[context->interrupt_id](context);
+	{
+		ret = g_interrupt_handlers[context->interrupt_id](context);
+		if (context->interrupt_id > 31)
+			pic_send_eoi(context->interrupt_id);
+		return ret;
+	}
 	return -1;
 }
 
@@ -112,6 +121,16 @@ void	isr_print_errcode(union isr_errcode errcode)
 	kprintf("pk = %X\n", errcode.pagefault.pk);
 }
 
+int	isr_keyboard_handler(struct isr_context *context)
+{
+	uint8_t keycode;
+
+	(void)context;
+	keycode = inb(KEYBOARD_IO_PORT);
+	kprintf("%c ", keycode);
+	return keycode;
+}
+
 int	isr_dummy_handler(struct isr_context *context)
 {
 	static int	i = 0;
@@ -119,7 +138,8 @@ int	isr_dummy_handler(struct isr_context *context)
 	if (i < 8)
 	{
 		kprintf("interrupt called: %d", context->interrupt_id);
-		kprintf(" (%d)\n", i++);
+		kprintf(" (%d)", i++);
+		kprintf("\n");
 		if (context->error_code.value != 0xdead0000)
 		{
 			kprintf("error = %x\n", context->error_code);

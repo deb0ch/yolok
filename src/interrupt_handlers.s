@@ -4,7 +4,6 @@ extern interrupts_handler
 %macro interrupt_no_error 1	; macro taking one parameter
 [GLOBAL isr%1]			; %1 = macro first parameter
 isr%1:
-	cli			; disable interrupts for interrupt treatment
         push 0xdead0000		; Push dummy value when there is no error code
         push %1			; interrupt_id
 	jmp context_saving
@@ -13,7 +12,6 @@ isr%1:
 %macro interrupt_error 1	; macro taking one parameter
 [GLOBAL isr%1]			; %1 = macro first parameter
 isr%1:
-	cli			; disable interrupts for interrupt treatment
 				;  Do not push anything if there is an error code
         push %1			; interrupt_id
 	jmp context_saving
@@ -63,5 +61,4 @@ context_saving:
 	pop gs
 	popa
 	add esp, 8
-	sti			; re-enable interrupts
 	iret
