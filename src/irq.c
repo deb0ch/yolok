@@ -5,14 +5,14 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Thu Dec 17 19:28:28 2015 chauvo_t
-** Last update Thu Dec 17 22:22:00 2015 chauvo_t
+** Last update Fri Dec 18 12:45:04 2015 chauvo_t
 */
 
 #include "asm_utils.h"
 #include "interrupts.h"
 #include "irq.h"
 
-void irq_init()
+void	irq_init()
 {
 	pic_remap(0x20, 0x28);
 	irq_mask_all();
@@ -32,8 +32,50 @@ void irq_init()
 	interrupts_set_isr(45, &isr45, ISR_KERNEL);
 	interrupts_set_isr(46, &isr46, ISR_KERNEL);
 	interrupts_set_isr(47, &isr47, ISR_KERNEL);
-	//irq_clear_mask(0);	// PIT (Programmable Interval Timer)
-	irq_clear_mask(1);	// keyboard
+}
+
+void	irq_mask_all()
+{
+	outb(PIC1_DATA, 0xFF);
+	outb(PIC2_DATA, 0xFF);
+}
+
+void	irq_unmask_all()
+{
+	outb(PIC1_DATA, 0x00);
+	outb(PIC2_DATA, 0x00);
+}
+
+void	irq_set_mask(unsigned char irq_line)
+{
+	uint16_t port;
+	uint8_t value;
+
+	if (irq_line < 8)
+		port = PIC1_DATA;
+	else
+	{
+		port = PIC2_DATA;
+		irq_line -= 8;
+	}
+	value = inb(port) | (1 << irq_line);
+	outb(port, value);
+}
+
+void	irq_clear_mask(unsigned char irq_line)
+{
+	uint16_t port;
+	uint8_t value;
+
+	if (irq_line < 8)
+		port = PIC1_DATA;
+	else
+	{
+		port = PIC2_DATA;
+		irq_line -= 8;
+	}
+	value = inb(port) & ~(1 << irq_line);
+	outb(port, value);
 }
 
 /*
@@ -44,7 +86,7 @@ void irq_init()
   on x86 it should be offset1 = 0x20 (32), offset2 = 0x28 (40)
   from http://wiki.osdev.org/8259_PIC#Programming_with_the_8259_PIC
 */
-void pic_remap(int offset1, int offset2)
+void	pic_remap(int offset1, int offset2)
 {
 	unsigned char a1;
 	unsigned char a2;
@@ -77,51 +119,7 @@ void pic_remap(int offset1, int offset2)
 	cpu_relax();
 }
 
-void irq_mask_all()
-{
-	outb(PIC1_DATA, 0xFF);
-	outb(PIC2_DATA, 0xFF);
-}
-
-void irq_unmask_all()
-{
-	outb(PIC1_DATA, 0x00);
-	outb(PIC2_DATA, 0x00);
-}
-
-void irq_set_mask(unsigned char irq_line)
-{
-	uint16_t port;
-	uint8_t value;
-
-	if (irq_line < 8)
-		port = PIC1_DATA;
-	else
-	{
-		port = PIC2_DATA;
-		irq_line -= 8;
-	}
-	value = inb(port) | (1 << irq_line);
-	outb(port, value);
-}
-
-void irq_clear_mask(unsigned char irq_line)
-{
-	uint16_t port;
-	uint8_t value;
-
-	if (irq_line < 8)
-		port = PIC1_DATA;
-	else
-	{
-		port = PIC2_DATA;
-		irq_line -= 8;
-	}
-	value = inb(port) & ~(1 << irq_line);
-	outb(port, value);
-}
-
-void pic_send_eoi(unsigned char irq)
+void	pic_send_eoi(unsigned char irq)
 {
 	outb(PIC1_COMMAND, PIC_EOI);
 	if (irq >= 32 + 8)

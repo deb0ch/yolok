@@ -5,7 +5,7 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Fri Nov 20 11:29:57 2015 chauvo_t
-** Last update Thu Dec 17 22:15:11 2015 chauvo_t
+** Last update Fri Dec 18 01:02:22 2015 chauvo_t
 */
 
 #ifndef INTERRUPTS_H_
@@ -17,9 +17,6 @@
 # define ISR_USER	1
 
 # define IDT_SIZE	256
-
-# define KEYBOARD_IO_PORT	0x60	// keyboard buffer I/O space address
-# define KEYBOARD_STATUS_PORT	0x64	// keyboard status register I/O space address
 
 /*
  * Intel manual Vol. 3A 6-10 (pdf p2105) - Figure 6-1
@@ -143,7 +140,6 @@ void	load_idt(struct idtr_register *idtr);
  */
 int	interrupts_handler(struct isr_context *context);
 
-int	isr_keyboard_handler(struct isr_context *context);
 int	isr_dummy_handler(struct isr_context *context);
 
 extern int isr0(struct isr_context *);

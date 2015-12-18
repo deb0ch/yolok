@@ -5,12 +5,13 @@
 ** Login   <chauvo_t@epitech.net>
 **
 ** Started on  Fri Nov 20 11:30:53 2015 chauvo_t
-** Last update Thu Dec 17 22:17:08 2015 chauvo_t
+** Last update Fri Dec 18 01:02:43 2015 chauvo_t
 */
 
 #include "asm_utils.h"
 #include "irq.h"
 #include "interrupts.h"
+#include "keyboard.h"
 #include "kstdio.h"
 #include "string.h"
 
@@ -29,7 +30,6 @@ void	interrupts_init()
 	{
 		g_interrupt_handlers[i] = &isr_dummy_handler;
 	}
-	g_interrupt_handlers[33] = isr_keyboard_handler; // handle keyboard inputs
 	interrupts_set_isr(0, &isr0, ISR_KERNEL);
 	interrupts_set_isr(1, &isr1, ISR_KERNEL);
 	interrupts_set_isr(2, &isr2, ISR_KERNEL);
@@ -119,16 +119,6 @@ void	isr_print_errcode(union isr_errcode errcode)
 	kprintf("rsvd = %X\n", errcode.pagefault.rsvd);
 	kprintf("i_d = %X\n", errcode.pagefault.i_d);
 	kprintf("pk = %X\n", errcode.pagefault.pk);
-}
-
-int	isr_keyboard_handler(struct isr_context *context)
-{
-	uint8_t keycode;
-
-	(void)context;
-	keycode = inb(KEYBOARD_IO_PORT);
-	kprintf("%c ", keycode);
-	return keycode;
 }
 
 int	isr_dummy_handler(struct isr_context *context)
