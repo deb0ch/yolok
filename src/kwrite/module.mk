@@ -8,9 +8,9 @@
 ## Last update Wed Jul 22 20:39:57 2015 deb0ch
 ##
 
-THIS_DIR_L0	:= kwrite
+THIS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-MOD_SRC		:=	kwrite.c		\
-			kwrite_vga.c		\
+MOD_SRC	:=	kwrite.c			\
+				    kwrite_vga.c  \
 
-SRCS		+= $(addprefix $(THIS_DIR_L0)/, $(MOD_SRC))
+SRCS += $(addprefix $(THIS_DIR), $(MOD_SRC))

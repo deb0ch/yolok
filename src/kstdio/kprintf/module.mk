@@ -8,11 +8,11 @@
 ## Last update Sun Nov 29 13:05:32 2015 chauvo_t
 ##
 
-THIS_DIR_L1	:= kprintf
+THIS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-MOD_SRC		:=	kprintf.c			\
-			kprintf_format_specifiers.c	\
+MOD_SRC := kprintf.c                    \
+           kprintf_format_specifiers.c  \
 
-SRCS		+= $(addprefix $(THIS_DIR_L0)/$(THIS_DIR_L1)/, $(MOD_SRC))
+SRCS += $(addprefix $(THIS_DIR), $(MOD_SRC))
 
-SUBDIRS		+= $(THIS_DIR_L0)/$(THIS_DIR_L1)/inc
+SUBDIRS += $(THIS_DIR)inc
